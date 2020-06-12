@@ -12,7 +12,7 @@ counter <- function(input, output, session) {
   count <- reactiveVal(0)
   observeEvent(input$button, {
     count(count() + 1)
-    # stop("Test observeEvent error")
+    stop("Test observeEvent error")
   })
   output$out <- renderText({
     count()
@@ -25,7 +25,9 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  callModule(counter, "counter1")
+  tryCatch({
+    callModule(counter, "counter1")
+  }, error = function(err) {message("Fail gracefully")})
 }
 
 shinyApp(ui, server)
